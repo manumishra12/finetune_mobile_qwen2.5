@@ -1,0 +1,102 @@
+// main format:
+{
+  "intent": "<normalized_intent_label>",
+
+  "primary_journey": "<primary_domain>",
+  "journeys": ["<domain_1>", "<domain_2>"],
+
+  "needs_tools": true,
+  "tool": "<canonical_tool_id_or_null>",
+  "arguments": {
+    "<arg_name>": "<value_or_null>"
+  },
+
+  "missing_fields": ["<arg_name_1>", "<arg_name_2>"],
+  "needs_clarification": false,
+  "clarification": "<single_question_or_null>",
+
+  "complexity_score": 0,
+  "routing_confidence": 0.0,
+
+  "formatting_style": "<style_id>",
+  "response_template": "<template_id_or_null>"
+}
+
+
+//---------------------------------------------------------------------------------------------
+{
+  "instruction": "Classify intent, decide routing, select tool, and extract parameters.",
+  "input": "User reviews for Samsung Galaxy",
+  "output": {
+    "intent": "product_reviews",
+    "primary_journey": "value_assurance",
+    "journeys": ["value_assurance"],
+
+    "needs_tools": true,
+    "tool": "search.web",
+    "arguments": {
+      "product": "Samsung Galaxy"
+    },
+    "missing_fields": [],
+    "needs_clarification": false,
+    "clarification": null,
+
+    "complexity_score": 30,
+    "routing_confidence": 0.8,
+
+    "formatting_style": "concise_summary",
+    "response_template": "review_summary"
+  }
+}
+
+//no tool
+{
+  "instruction": "Classify intent and routing.",
+  "input": "What is the capital of France?",
+  "output": {
+    "intent": "fact_lookup",
+    "primary_journey": "general_qa",
+    "journeys": ["general_qa"],
+
+    "needs_tools": false,
+    "tool": null,
+    "arguments": {},
+    "missing_fields": [],
+    "needs_clarification": false,
+    "clarification": null,
+
+    "complexity_score": 10,
+    "routing_confidence": 0.95,
+
+    "formatting_style": "concise_friendly",
+    "response_template": null
+  }
+}
+
+// missing filed
+{
+  "instruction": "Classify intent, select tool, and detect missing information.",
+  "input": "Book a flight",
+  "output": {
+    "intent": "book_flight",
+    "primary_journey": "flight",
+    "journeys": ["flight"],
+
+    "needs_tools": true,
+    "tool": "flight.search",
+    "arguments": {
+      "from": null,
+      "to": null,
+      "date": null
+    },
+    "missing_fields": ["from", "to", "date"],
+    "needs_clarification": true,
+    "clarification": "Where are you flying from, to which city, and on what date?",
+
+    "complexity_score": 25,
+    "routing_confidence": 0.85,
+
+    "formatting_style": "neutral_informative",
+    "response_template": "clarification_prompt"
+  }
+}
