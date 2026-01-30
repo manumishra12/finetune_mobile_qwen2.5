@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>device_run.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="running-gguf-models-offline-on-device-in-flutter-tier-1--tier-2">Running GGUF Models Offline on Device in Flutter (Tier-1 &amp; Tier-2)</h1>
+<h2 id="overview">Overview</h2>
+<p>This guide explains how to run your fine-tuned Qwen-2.5 GGUF models <strong>locally and offline</strong> inside a Flutter app. The architecture uses two separate models:</p>
+<ul>
+<li><strong>Tier-1 (Router):</strong> A small, always-on model (Qwen-2.5-1.5B) that classifies intent, routes requests, and outputs strict JSON. It never generates long text.</li>
+<li><strong>Tier-2 (Reasoner):</strong> A larger, on-demand model (Qwen-2.5-3B or 7B) that handles deep reasoning, explanations, and planning. It outputs natural language.</li>
+</ul>
+<p>Both models are exported as <code>.gguf</code> files after fine-tuning and run on-device using a C++ inference engine (llama.cpp) via Flutter's FFI bridge.</p>
+<h3 id="architecture-overview">Architecture Overview</h3>
+<pre><code class="language-mermaid"><div class="mermaid">graph TB
+    subgraph Device["Mobile Device — On-Device Inference"]
+        User["User Input"] --> Orchestrator["Orchestrator<br/>(Flutter / Dart)"]
+        Orchestrator --> T1["Tier-1 Router<br/>Qwen-2.5-1.5B · Q4_K_M<br/>~900 MB · Always Loaded"]
+        T1 -->|"JSON routing decision"| Orchestrator
+        Orchestrator -->|"complexity_score > 60"| T2["Tier-2 Reasoner<br/>Qwen-2.5-3B · Q4_K_M<br/>~1.8 GB · On-Demand"]
+        T2 -->|"Natural language response"| Orchestrator
+        Orchestrator -->|"needs_tools = true"| Cloud["Cloud API"]
+        Cloud -->|"Tool result"| Orchestrator
+        Orchestrator --> Response["Response to User"]
+    end
+
+    subgraph Engine["Inference Engine"]
+        LLAMA["llama.cpp via FFI Bridge"]
+    end
+
+    T1 -.->|"loads via"| LLAMA
+    T2 -.->|"loads via"| LLAMA
+</div></code></pre>
+<h3 id="model-pipeline-fine-tune-to-deployment">Model Pipeline: Fine-Tune to Deployment</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    A["Fine-Tune<br/>Qwen-2.5 base"] --> B["Export to<br/>F16 GGUF<br/>(full precision)"]
+    B --> C["Quantize to<br/>Q4_K_M GGUF<br/>(~4.5 bits/weight)"]
+    C --> D["Deploy to<br/>Device Storage"]
+
+    style A fill:#4a90d9,color:#fff
+    style B fill:#7b68ee,color:#fff
+    style C fill:#e67e22,color:#fff
+    style D fill:#27ae60,color:#fff
+</div></code></pre>
+<hr>
+<h2 id="understanding-gguf-file-formats-f16-vs-q4km">Understanding GGUF File Formats: F16 vs Q4_K_M</h2>
+<p>After fine-tuning, you export your model to GGUF. The two most common formats are <strong>F16</strong> (full precision) and <strong>Q4_K_M</strong> (quantized). Understanding the difference is critical for choosing the right file for each tier.</p>
+<h3 id="f16-float16--half-precision">F16 (Float16 / Half Precision)</h3>
+<ul>
+<li><strong>What it is:</strong> The model weights are stored in 16-bit floating point. This is essentially the full-quality model with no compression.</li>
+<li><strong>File size:</strong> Large. A 1.5B parameter model is ~3 GB; a 3B model is ~6 GB; a 7B model is ~14 GB.</li>
+<li><strong>Quality:</strong> Maximum accuracy. No quality loss from the trained weights.</li>
+<li><strong>Speed:</strong> Slower inference on mobile because more data must be read from memory per token.</li>
+<li><strong>RAM usage:</strong> High. The entire model must fit in RAM at full precision.</li>
+<li><strong>When to use F16:</strong>
+<ul>
+<li>During development and testing on a desktop/emulator to validate model correctness.</li>
+<li>As the source file for producing quantized versions (you quantize FROM F16).</li>
+<li>On high-end devices with abundant RAM where you want maximum quality and speed is not a concern.</li>
+<li><strong>Never ship F16 to production mobile apps</strong> unless targeting tablets or very high-end devices with 12+ GB RAM.</li>
+</ul>
+</li>
+</ul>
+<h3 id="q4km-4-bit-quantization-k-quant-medium">Q4_K_M (4-bit Quantization, K-Quant Medium)</h3>
+<ul>
+<li><strong>What it is:</strong> The model weights are compressed to ~4.5 bits per weight using the K-quant method with medium quality settings. This is a lossy compression, but the quality loss is minimal for well-trained models.</li>
+<li><strong>File size:</strong> Much smaller. A 1.5B parameter model is ~900 MB; a 3B model is ~1.8 GB; a 7B model is ~4 GB.</li>
+<li><strong>Quality:</strong> Very close to F16 for most tasks. Routing/classification (Tier-1) and natural language generation (Tier-2) both survive Q4_K_M quantization well. Minor degradation is possible on edge-case reasoning tasks.</li>
+<li><strong>Speed:</strong> Faster inference on mobile because less memory bandwidth is needed per token.</li>
+<li><strong>RAM usage:</strong> Significantly lower. This is what makes on-device inference practical.</li>
+<li><strong>When to use Q4_K_M:</strong>
+<ul>
+<li><strong>Production mobile apps</strong> -- this is the standard format for shipping.</li>
+<li>Both Tier-1 and Tier-2 models in your Flutter app.</li>
+<li>Any device with limited RAM (which is every phone).</li>
+</ul>
+</li>
+</ul>
+<h3 id="quick-comparison-table">Quick Comparison Table</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>F16 (Half Precision)</th>
+<th>Q4_K_M (4-bit Quantized)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bits per weight</td>
+<td>16</td>
+<td>~4.5</td>
+</tr>
+<tr>
+<td>1.5B model size</td>
+<td>~3 GB</td>
+<td>~900 MB</td>
+</tr>
+<tr>
+<td>3B model size</td>
+<td>~6 GB</td>
+<td>~1.8 GB</td>
+</tr>
+<tr>
+<td>7B model size</td>
+<td>~14 GB</td>
+<td>~4 GB</td>
+</tr>
+<tr>
+<td>Quality loss</td>
+<td>None</td>
+<td>Minimal</td>
+</tr>
+<tr>
+<td>Inference speed</td>
+<td>Slower</td>
+<td>Faster</td>
+</tr>
+<tr>
+<td>RAM required</td>
+<td>High</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>Dev/testing, source for quantization</td>
+<td>Production mobile deployment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-to-convert-f16-to-q4km">How to Convert F16 to Q4_K_M</h3>
+<p>If you have an F16 GGUF and need to quantize it:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Using llama.cpp's quantize tool</span>
+./quantize  model_f16.gguf  model_q4_k_m.gguf  Q4_K_M
+</div></code></pre>
+<p>You always fine-tune first, export to F16 GGUF, then quantize to Q4_K_M for deployment.</p>
+<hr>
+<h2 id="which-gguf-files-you-need">Which GGUF Files You Need</h2>
+<p>For the Tier-1 / Tier-2 architecture, you will have <strong>two separate GGUF files</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Model</th>
+<th>Role</th>
+<th>Recommended Format</th>
+<th>Approximate Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tier1_router_q4_k_m.gguf</code></td>
+<td>Qwen-2.5-1.5B (fine-tuned)</td>
+<td>Intent routing, JSON output</td>
+<td>Q4_K_M</td>
+<td>~900 MB</td>
+</tr>
+<tr>
+<td><code>tier2_reasoner_q4_k_m.gguf</code></td>
+<td>Qwen-2.5-3B (fine-tuned)</td>
+<td>Reasoning, natural language</td>
+<td>Q4_K_M</td>
+<td>~1.8 GB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Total on-device storage:</strong> ~2.7 GB (both models combined with Q4_K_M).</p>
+<blockquote>
+<p><strong>Note:</strong> You do NOT need to load both models into RAM simultaneously. Tier-1 stays loaded. Tier-2 is loaded on-demand and unloaded when not needed.</p>
+</blockquote>
+<hr>
+<h2 id="step-1-add-dependencies">Step 1: Add Dependencies</h2>
+<p>Update your <code>pubspec.yaml</code>:</p>
+<pre class="hljs"><code><div><span class="hljs-attr">dependencies:</span>
+    <span class="hljs-attr">flutter:</span>
+        <span class="hljs-attr">sdk:</span> <span class="hljs-string">flutter</span>
+    <span class="hljs-attr">llama_cpp_dart:</span> <span class="hljs-string">^0.1.3</span>       <span class="hljs-comment"># C++ inference engine FFI bindings</span>
+    <span class="hljs-attr">path_provider:</span> <span class="hljs-string">^2.1.2</span>        <span class="hljs-comment"># Access to device file system paths</span>
+
+<span class="hljs-attr">flutter:</span>
+    <span class="hljs-attr">assets:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">assets/models/tier1_router_q4_k_m.gguf</span>
+        <span class="hljs-comment"># Tier-2 is NOT bundled as an asset (too large).</span>
+        <span class="hljs-comment"># It is downloaded separately after install. See Step 4.</span>
+</div></code></pre>
+<h3 id="why-tier-1-is-bundled-but-tier-2-is-not">Why Tier-1 is bundled but Tier-2 is not</h3>
+<ul>
+<li><strong>Tier-1 (~900 MB):</strong> Small enough to bundle inside the APK/IPA. The app works immediately after install because the router is always available.</li>
+<li><strong>Tier-2 (~1.8 GB+):</strong> Too large to bundle. It would bloat the app download beyond acceptable limits. Instead, download it on first launch (or on-demand) to the device's local storage.</li>
+</ul>
+<p>If your Tier-1 model is also too large to bundle (e.g., you used a bigger base model), you can download both models post-install and skip the <code>assets</code> declaration entirely.</p>
+<hr>
+<h2 id="step-2-configure-native-platforms">Step 2: Configure Native Platforms</h2>
+<h3 id="android">Android</h3>
+<p><strong><code>android/app/src/main/AndroidManifest.xml</code>:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">application</span>
+        <span class="hljs-attr">android:largeHeap</span>=<span class="hljs-string">"true"</span>
+        <span class="hljs-attr">android:requestLegacyExternalStorage</span>=<span class="hljs-string">"true"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- android:largeHeap gives the app access to more RAM --&gt;</span>
+    <span class="hljs-comment">&lt;!-- Required for loading GGUF models into memory --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">application</span>&gt;</span>
+</div></code></pre>
+<p><strong><code>android/app/build.gradle</code>:</strong></p>
+<pre class="hljs"><code><div>android {
+    defaultConfig {
+        <span class="hljs-comment">// Set minimum SDK to 24 (Android 7.0) for 64-bit support</span>
+        minSdkVersion <span class="hljs-number">24</span>
+    }
+
+    <span class="hljs-comment">// Prevent compression of GGUF files in the APK</span>
+    aaptOptions {
+        noCompress <span class="hljs-string">'gguf'</span>
+    }
+}
+</div></code></pre>
+<blockquote>
+<p><strong>Important:</strong> Older Android devices (pre-Android 10) have a <strong>4 GB file size limit</strong> for individual assets. Q4_K_M for 1.5B and 3B models are both under this limit.</p>
+</blockquote>
+<h3 id="ios">iOS</h3>
+<p><strong><code>ios/Runner/Info.plist</code>:</strong></p>
+<ul>
+<li>Set deployment target to <strong>iOS 14.0+</strong></li>
+<li>No additional configuration needed for file access since <code>getApplicationDocumentsDirectory()</code> is within the app sandbox.</li>
+</ul>
+<p><strong><code>ios/Podfile</code>:</strong></p>
+<pre class="hljs"><code><div>platform <span class="hljs-symbol">:ios</span>, <span class="hljs-string">'14.0'</span>
+</div></code></pre>
+<hr>
+<h2 id="step-3-implement-model-services">Step 3: Implement Model Services</h2>
+<p>You need two service classes -- one for each tier. Both use the same llama.cpp engine but with different models and different usage patterns.</p>
+<h3 id="tier-1-model-service-always-on-router">Tier-1 Model Service (Always-On Router)</h3>
+<p>Create <code>lib/services/tier1_service.dart</code>:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> <span class="hljs-string">'dart:io'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'dart:convert'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'package:flutter/services.dart'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'package:path_provider/path_provider.dart'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'package:llama_cpp_dart/llama_cpp_dart.dart'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Tier1Service</span> </span>{
+    LlamaProcessor? _processor;
+    <span class="hljs-built_in">bool</span> _isLoaded = <span class="hljs-keyword">false</span>;
+
+    <span class="hljs-comment">/// <span class="markdown">Copies the Tier-1 model from app assets to local storage.</span></span>
+    <span class="hljs-comment">/// <span class="markdown">The C++ engine needs a real file path -- it cannot read from</span></span>
+    <span class="hljs-comment">/// <span class="markdown">Flutter's asset bundle directly.</span></span>
+    Future&lt;<span class="hljs-built_in">String</span>&gt; _copyAssetToLocal() <span class="hljs-keyword">async</span> {
+        <span class="hljs-keyword">final</span> dir = <span class="hljs-keyword">await</span> getApplicationDocumentsDirectory();
+        <span class="hljs-keyword">final</span> filePath = <span class="hljs-string">'<span class="hljs-subst">${dir.path}</span>/tier1_router_q4_k_m.gguf'</span>;
+        <span class="hljs-keyword">final</span> file = File(filePath);
+
+        <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">await</span> file.exists()) {
+            <span class="hljs-keyword">final</span> byteData = <span class="hljs-keyword">await</span> rootBundle.load(
+                <span class="hljs-string">'assets/models/tier1_router_q4_k_m.gguf'</span>,
+            );
+            <span class="hljs-keyword">await</span> file.writeAsBytes(
+                byteData.buffer.asUint8List(
+                    byteData.offsetInBytes,
+                    byteData.lengthInBytes,
+                ),
+            );
+        }
+        <span class="hljs-keyword">return</span> filePath;
+    }
+
+    <span class="hljs-comment">/// <span class="markdown">Load Tier-1 into memory. Call this once at app startup.</span></span>
+    <span class="hljs-comment">/// <span class="markdown">Tier-1 stays loaded for the entire app session.</span></span>
+    Future&lt;<span class="hljs-keyword">void</span>&gt; load() <span class="hljs-keyword">async</span> {
+        <span class="hljs-keyword">if</span> (_isLoaded) <span class="hljs-keyword">return</span>;
+
+        <span class="hljs-keyword">final</span> modelPath = <span class="hljs-keyword">await</span> _copyAssetToLocal();
+        <span class="hljs-keyword">final</span> params = ModelParams()
+            ..nCtx = <span class="hljs-number">512</span>       <span class="hljs-comment">// Small context window (routing needs little)</span>
+            ..nThreads = <span class="hljs-number">4</span>;    <span class="hljs-comment">// Adjust based on device CPU cores</span>
+
+        _processor = LlamaProcessor(path: modelPath, modelParams: params);
+        _processor?.load();
+        _isLoaded = <span class="hljs-keyword">true</span>;
+    }
+
+    <span class="hljs-comment">/// <span class="markdown">Run a user message through Tier-1 and parse the JSON response.</span></span>
+    <span class="hljs-comment">/// <span class="markdown">Returns a structured routing decision.</span></span>
+    Future&lt;<span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">dynamic</span>&gt;&gt; route(<span class="hljs-built_in">String</span> userMessage) <span class="hljs-keyword">async</span> {
+        <span class="hljs-keyword">if</span> (!_isLoaded) <span class="hljs-keyword">await</span> load();
+
+        <span class="hljs-keyword">final</span> systemPrompt = <span class="hljs-string">'You are a Tier-1 router. Output JSON only.'</span>;
+        <span class="hljs-keyword">final</span> prompt = <span class="hljs-string">'&lt;|im_start|&gt;system\n<span class="hljs-subst">$systemPrompt</span>&lt;|im_end|&gt;\n'</span>
+            <span class="hljs-string">'&lt;|im_start|&gt;user\n<span class="hljs-subst">$userMessage</span>&lt;|im_end|&gt;\n'</span>
+            <span class="hljs-string">'&lt;|im_start|&gt;assistant\n'</span>;
+
+        <span class="hljs-keyword">final</span> buffer = <span class="hljs-built_in">StringBuffer</span>();
+        <span class="hljs-keyword">await</span> <span class="hljs-keyword">for</span> (<span class="hljs-keyword">final</span> token <span class="hljs-keyword">in</span> _processor!.stream(prompt)) {
+            buffer.write(token);
+        }
+
+        <span class="hljs-keyword">return</span> jsonDecode(buffer.toString()) <span class="hljs-keyword">as</span> <span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">dynamic</span>&gt;;
+    }
+
+    <span class="hljs-keyword">void</span> dispose() {
+        _processor?.unload();
+        _isLoaded = <span class="hljs-keyword">false</span>;
+    }
+}
+</div></code></pre>
+<p><strong>Key points about Tier-1:</strong></p>
+<ul>
+<li>Loaded once at app startup, stays in memory the entire session.</li>
+<li>Uses a small context window (<code>nCtx = 512</code>) because routing decisions are short.</li>
+<li>Output is always strict JSON matching the Tier-1 schema (intent, journey, tool, complexity_score, etc.).</li>
+<li>Uses <strong>ChatML format</strong> (<code>&lt;|im_start|&gt;</code> / <code>&lt;|im_end|&gt;</code> tokens) because the Qwen-2.5 models are pretrained with this format.</li>
+</ul>
+<hr>
+<h3 id="tier-2-model-service-on-demand-reasoner">Tier-2 Model Service (On-Demand Reasoner)</h3>
+<p>Create <code>lib/services/tier2_service.dart</code>:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> <span class="hljs-string">'dart:io'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'package:path_provider/path_provider.dart'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'package:llama_cpp_dart/llama_cpp_dart.dart'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Tier2Service</span> </span>{
+    LlamaProcessor? _processor;
+    <span class="hljs-built_in">bool</span> _isLoaded = <span class="hljs-keyword">false</span>;
+    <span class="hljs-built_in">bool</span> _isDownloaded = <span class="hljs-keyword">false</span>;
+
+    <span class="hljs-comment">/// <span class="markdown">Check if the Tier-2 model has been downloaded to local storage.</span></span>
+    Future&lt;<span class="hljs-built_in">bool</span>&gt; isAvailable() <span class="hljs-keyword">async</span> {
+        <span class="hljs-keyword">final</span> dir = <span class="hljs-keyword">await</span> getApplicationDocumentsDirectory();
+        <span class="hljs-keyword">final</span> file = File(<span class="hljs-string">'<span class="hljs-subst">${dir.path}</span>/tier2_reasoner_q4_k_m.gguf'</span>);
+        _isDownloaded = <span class="hljs-keyword">await</span> file.exists();
+        <span class="hljs-keyword">return</span> _isDownloaded;
+    }
+
+    <span class="hljs-comment">/// <span class="markdown">Download the Tier-2 model from your server.</span></span>
+    <span class="hljs-comment">/// <span class="markdown">Call this on first launch or when the user opts in.</span></span>
+    <span class="hljs-comment">/// <span class="markdown">Returns a stream of download progress (0.0 to 1.0).</span></span>
+    Stream&lt;<span class="hljs-built_in">double</span>&gt; download(<span class="hljs-built_in">String</span> downloadUrl) <span class="hljs-keyword">async</span>* {
+        <span class="hljs-keyword">final</span> dir = <span class="hljs-keyword">await</span> getApplicationDocumentsDirectory();
+        <span class="hljs-keyword">final</span> filePath = <span class="hljs-string">'<span class="hljs-subst">${dir.path}</span>/tier2_reasoner_q4_k_m.gguf'</span>;
+        <span class="hljs-keyword">final</span> file = File(filePath);
+
+        <span class="hljs-comment">// Use your preferred HTTP client (dio, http, etc.)</span>
+        <span class="hljs-comment">// This is pseudocode -- replace with your actual download logic.</span>
+        <span class="hljs-keyword">final</span> httpClient = HttpClient();
+        <span class="hljs-keyword">final</span> request = <span class="hljs-keyword">await</span> httpClient.getUrl(<span class="hljs-built_in">Uri</span>.parse(downloadUrl));
+        <span class="hljs-keyword">final</span> response = <span class="hljs-keyword">await</span> request.close();
+        <span class="hljs-keyword">final</span> totalBytes = response.contentLength;
+        <span class="hljs-keyword">var</span> receivedBytes = <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">final</span> sink = file.openWrite();
+        <span class="hljs-keyword">await</span> <span class="hljs-keyword">for</span> (<span class="hljs-keyword">final</span> chunk <span class="hljs-keyword">in</span> response) {
+            sink.add(chunk);
+            receivedBytes += chunk.length;
+            <span class="hljs-keyword">if</span> (totalBytes &gt; <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">yield</span> receivedBytes / totalBytes;
+            }
+        }
+        <span class="hljs-keyword">await</span> sink.close();
+        httpClient.close();
+        _isDownloaded = <span class="hljs-keyword">true</span>;
+    }
+
+    <span class="hljs-comment">/// <span class="markdown">Load Tier-2 into memory. Only call when needed.</span></span>
+    Future&lt;<span class="hljs-keyword">void</span>&gt; ensureLoaded() <span class="hljs-keyword">async</span> {
+        <span class="hljs-keyword">if</span> (_isLoaded) <span class="hljs-keyword">return</span>;
+        <span class="hljs-keyword">if</span> (!_isDownloaded) {
+            <span class="hljs-keyword">final</span> available = <span class="hljs-keyword">await</span> isAvailable();
+            <span class="hljs-keyword">if</span> (!available) {
+                <span class="hljs-keyword">throw</span> StateError(<span class="hljs-string">'Tier-2 model not downloaded yet'</span>);
+            }
+        }
+
+        <span class="hljs-keyword">final</span> dir = <span class="hljs-keyword">await</span> getApplicationDocumentsDirectory();
+        <span class="hljs-keyword">final</span> modelPath = <span class="hljs-string">'<span class="hljs-subst">${dir.path}</span>/tier2_reasoner_q4_k_m.gguf'</span>;
+
+        <span class="hljs-keyword">final</span> params = ModelParams()
+            ..nCtx = <span class="hljs-number">2048</span>      <span class="hljs-comment">// Larger context for reasoning tasks</span>
+            ..nThreads = <span class="hljs-number">4</span>;
+
+        _processor = LlamaProcessor(path: modelPath, modelParams: params);
+        _processor?.load();
+        _isLoaded = <span class="hljs-keyword">true</span>;
+    }
+
+    <span class="hljs-comment">/// <span class="markdown">Generate a reasoning response. Returns a stream of tokens</span></span>
+    <span class="hljs-comment">/// <span class="markdown">so you can display the response as it generates (streaming UX).</span></span>
+    Stream&lt;<span class="hljs-built_in">String</span>&gt; generate(<span class="hljs-built_in">String</span> userMessage) {
+        <span class="hljs-keyword">if</span> (!_isLoaded) {
+            <span class="hljs-keyword">return</span> Stream.value(<span class="hljs-string">'Tier-2 model is not loaded.'</span>);
+        }
+
+        <span class="hljs-keyword">final</span> systemPrompt = <span class="hljs-string">'You are a helpful reasoning assistant.'</span>;
+        <span class="hljs-keyword">final</span> prompt = <span class="hljs-string">'&lt;|im_start|&gt;system\n<span class="hljs-subst">$systemPrompt</span>&lt;|im_end|&gt;\n'</span>
+            <span class="hljs-string">'&lt;|im_start|&gt;user\n<span class="hljs-subst">$userMessage</span>&lt;|im_end|&gt;\n'</span>
+            <span class="hljs-string">'&lt;|im_start|&gt;assistant\n'</span>;
+
+        <span class="hljs-keyword">return</span> _processor!.stream(prompt);
+    }
+
+    <span class="hljs-comment">/// <span class="markdown">Unload Tier-2 from memory to free RAM.</span></span>
+    <span class="hljs-comment">/// <span class="markdown">Call this when reasoning is complete or on memory pressure.</span></span>
+    <span class="hljs-keyword">void</span> unload() {
+        _processor?.unload();
+        _processor = <span class="hljs-keyword">null</span>;
+        _isLoaded = <span class="hljs-keyword">false</span>;
+    }
+
+    <span class="hljs-keyword">void</span> dispose() =&gt; unload();
+}
+</div></code></pre>
+<p><strong>Key points about Tier-2:</strong></p>
+<ul>
+<li><strong>Not bundled</strong> with the app. Downloaded separately to device storage.</li>
+<li><strong>Loaded on-demand</strong> only when Tier-1's <code>complexity_score</code> exceeds the threshold (e.g., &gt; 60).</li>
+<li><strong>Unloaded after use</strong> to free RAM for the rest of the app.</li>
+<li>Uses a larger context window (<code>nCtx = 2048</code>) because reasoning tasks produce longer outputs.</li>
+<li>Output is natural language, not JSON.</li>
+</ul>
+<hr>
+<h2 id="step-4-implement-the-orchestrator">Step 4: Implement the Orchestrator</h2>
+<p>The orchestrator ties Tier-1 and Tier-2 together. This is the core control logic of your app.</p>
+<p>Create <code>lib/services/orchestrator.dart</code>:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> <span class="hljs-string">'tier1_service.dart'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'tier2_service.dart'</span>;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Orchestrator</span> </span>{
+    <span class="hljs-keyword">final</span> Tier1Service _tier1 = Tier1Service();
+    <span class="hljs-keyword">final</span> Tier2Service _tier2 = Tier2Service();
+
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">const</span> <span class="hljs-built_in">int</span> complexityThreshold = <span class="hljs-number">60</span>;
+
+    <span class="hljs-comment">/// <span class="markdown">Initialize -- load Tier-1 at startup. Tier-2 stays dormant.</span></span>
+    Future&lt;<span class="hljs-keyword">void</span>&gt; init() <span class="hljs-keyword">async</span> {
+        <span class="hljs-keyword">await</span> _tier1.load();
+    }
+
+    <span class="hljs-comment">/// <span class="markdown">Main entry point: process any user message.</span></span>
+    Future&lt;OrchestratorResult&gt; handle(<span class="hljs-built_in">String</span> userMessage) <span class="hljs-keyword">async</span> {
+        <span class="hljs-comment">// Step 1: Always run Tier-1 first</span>
+        <span class="hljs-keyword">final</span> routing = <span class="hljs-keyword">await</span> _tier1.route(userMessage);
+
+        <span class="hljs-comment">// Step 2: If Tier-1 needs clarification, ask the user</span>
+        <span class="hljs-keyword">if</span> (routing[<span class="hljs-string">'needs_clarification'</span>] == <span class="hljs-keyword">true</span>) {
+            <span class="hljs-keyword">return</span> OrchestratorResult(
+                type: ResultType.clarification,
+                text: routing[<span class="hljs-string">'clarification'</span>] <span class="hljs-keyword">as</span> <span class="hljs-built_in">String</span>,
+            );
+        }
+
+        <span class="hljs-comment">// Step 3: If complexity is high, escalate to Tier-2</span>
+        <span class="hljs-keyword">final</span> complexity = routing[<span class="hljs-string">'complexity_score'</span>] <span class="hljs-keyword">as</span> <span class="hljs-built_in">int</span>? ?? <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span> (complexity &gt; complexityThreshold) {
+            <span class="hljs-keyword">await</span> _tier2.ensureLoaded();
+
+            <span class="hljs-keyword">final</span> buffer = <span class="hljs-built_in">StringBuffer</span>();
+            <span class="hljs-keyword">await</span> <span class="hljs-keyword">for</span> (<span class="hljs-keyword">final</span> token <span class="hljs-keyword">in</span> _tier2.generate(userMessage)) {
+                buffer.write(token);
+            }
+
+            <span class="hljs-comment">// Optionally unload Tier-2 to free memory</span>
+            _tier2.unload();
+
+            <span class="hljs-keyword">return</span> OrchestratorResult(
+                type: ResultType.reasoning,
+                text: buffer.toString(),
+                routing: routing,
+            );
+        }
+
+        <span class="hljs-comment">// Step 4: If a cloud tool is needed, call it</span>
+        <span class="hljs-keyword">if</span> (routing[<span class="hljs-string">'needs_tools'</span>] == <span class="hljs-keyword">true</span>) {
+            <span class="hljs-keyword">return</span> OrchestratorResult(
+                type: ResultType.toolCall,
+                text: <span class="hljs-keyword">null</span>,
+                routing: routing,
+                <span class="hljs-comment">// Flutter will now call the cloud API using</span>
+                <span class="hljs-comment">// routing['tool'] and routing['arguments']</span>
+            );
+        }
+
+        <span class="hljs-comment">// Step 5: Simple response -- Tier-1 handled it entirely</span>
+        <span class="hljs-keyword">return</span> OrchestratorResult(
+            type: ResultType.local,
+            routing: routing,
+        );
+    }
+
+    <span class="hljs-keyword">void</span> dispose() {
+        _tier1.dispose();
+        _tier2.dispose();
+    }
+}
+
+<span class="hljs-keyword">enum</span> ResultType { clarification, reasoning, toolCall, local }
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OrchestratorResult</span> </span>{
+    <span class="hljs-keyword">final</span> ResultType type;
+    <span class="hljs-keyword">final</span> <span class="hljs-built_in">String</span>? text;
+    <span class="hljs-keyword">final</span> <span class="hljs-built_in">Map</span>&lt;<span class="hljs-built_in">String</span>, <span class="hljs-built_in">dynamic</span>&gt;? routing;
+
+    OrchestratorResult({required <span class="hljs-keyword">this</span>.type, <span class="hljs-keyword">this</span>.text, <span class="hljs-keyword">this</span>.routing});
+}
+</div></code></pre>
+<hr>
+<h2 id="step-5-memory-management-strategy">Step 5: Memory Management Strategy</h2>
+<p>Running models on-device requires careful memory management. Here is how to handle both tiers without crashing the app.</p>
+<h3 id="ram-budget-by-device-tier">RAM Budget by Device Tier</h3>
+<table>
+<thead>
+<tr>
+<th>Device Class</th>
+<th>Available RAM</th>
+<th>Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low-end (3-4 GB RAM)</td>
+<td>~1.5 GB for app</td>
+<td>Tier-1 only (Q4_K_M 1.5B). Skip Tier-2.</td>
+</tr>
+<tr>
+<td>Mid-range (6-8 GB RAM)</td>
+<td>~3 GB for app</td>
+<td>Tier-1 always loaded + Tier-2 (3B Q4_K_M) on-demand. Unload Tier-2 after each use.</td>
+</tr>
+<tr>
+<td>High-end (8-12+ GB RAM)</td>
+<td>~5 GB for app</td>
+<td>Tier-1 always loaded + Tier-2 (3B or 7B Q4_K_M) can stay resident longer.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="memory-lifecycle-diagram">Memory Lifecycle Diagram</h3>
+<pre><code class="language-mermaid"><div class="mermaid">stateDiagram-v2
+    [*] --> AppStartup: App launches
+
+    state "App Startup" as AppStartup
+    state "Tier-1 Loaded<br/>(~900 MB in RAM)" as T1Only
+    state "Loading Tier-2<br/>(~1.8 GB from disk)" as T2Loading
+    state "Both Models Active<br/>(~2.7 GB in RAM)" as BothActive
+    state "Tier-2 Unloaded<br/>(RAM freed)" as T2Unloaded
+    state "App Closed" as Closed
+
+    AppStartup --> T1Only: Copy asset → Load Tier-1 model
+
+    T1Only --> T2Loading: complexity_score > 60
+    T2Loading --> BothActive: Tier-2 loaded into RAM
+
+    BothActive --> T2Unloaded: Response complete
+    BothActive --> T2Unloaded: Memory pressure warning<br/>(onTrimMemory / didReceiveMemoryWarning)
+
+    T2Unloaded --> T1Only: RAM freed → ready for next request
+
+    T1Only --> Closed: dispose()
+    BothActive --> Closed: dispose()
+    T2Unloaded --> Closed: dispose()
+</div></code></pre>
+<h3 id="memory-rules">Memory Rules</h3>
+<ol>
+<li><strong>Tier-1 stays loaded</strong> for the entire session. At ~900 MB (Q4_K_M 1.5B), this is manageable on all modern phones.</li>
+<li><strong>Tier-2 loads only when <code>complexity_score &gt; threshold</code></strong> and unloads immediately after the response is complete.</li>
+<li><strong>Monitor memory pressure.</strong> On Android, listen to <code>ComponentCallbacks2.onTrimMemory()</code>. On iOS, respond to <code>UIApplication.didReceiveMemoryWarningNotification</code>. If triggered, unload Tier-2 immediately.</li>
+<li><strong>Never load both models at full context simultaneously</strong> on low-end devices. If Tier-2 needs to load, ensure Tier-1's context is minimal (it should be, since routing is already done).</li>
+</ol>
+<hr>
+<h2 id="step-6-file-structure">Step 6: File Structure</h2>
+<p>Here is the recommended project structure for the model-related files:</p>
+<pre class="hljs"><code><div>lib/
+  services/
+    tier1_service.dart       # Tier-1 router model service
+    tier2_service.dart       # Tier-2 reasoner model service
+    orchestrator.dart        # Coordinates Tier-1, Tier-2, and cloud tools
+assets/
+  models/
+    tier1_router_q4_k_m.gguf # Bundled with the app (if small enough)
+</div></code></pre>
+<p>The Tier-2 model file (<code>tier2_reasoner_q4_k_m.gguf</code>) lives in the device's application documents directory after download. It is <strong>not</strong> in the <code>assets/</code> folder.</p>
+<hr>
+<h2 id="complete-flow-what-happens-when-a-user-sends-a-message">Complete Flow: What Happens When a User Sends a Message</h2>
+<h3 id="orchestrator-decision-flowchart">Orchestrator Decision Flowchart</h3>
+<p>This is the core branching logic the orchestrator executes for every incoming user message:</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    A["User sends a message"] --> B["Tier-1 Router<br/>Classify intent · Output JSON"]
+    B --> C{"needs_clarification<br/>== true?"}
+
+    C -->|"Yes"| D["Return clarification<br/>prompt to user"]
+    D --> A
+
+    C -->|"No"| E{"complexity_score<br/>> 60?"}
+
+    E -->|"Yes"| F["Load Tier-2<br/>into memory"]
+    F --> G["Tier-2 Reasoner<br/>generates response<br/>(streamed token-by-token)"]
+    G --> H["Unload Tier-2<br/>from memory"]
+    H --> I["Return reasoning<br/>response to user"]
+
+    E -->|"No"| J{"needs_tools<br/>== true?"}
+
+    J -->|"Yes"| K["Call Cloud API<br/>using tool + arguments<br/>from Tier-1 JSON"]
+    K --> L["Return tool<br/>result to user"]
+
+    J -->|"No"| M["Return local response<br/>(Tier-1 handled it entirely)"]
+
+    style B fill:#4a90d9,color:#fff
+    style G fill:#e67e22,color:#fff
+    style K fill:#8e44ad,color:#fff
+    style D fill:#95a5a6,color:#fff
+    style M fill:#27ae60,color:#fff
+</div></code></pre>
+<hr>
+<h3 id="example-1-high-complexity-request-tier-2-escalation">Example 1: High-Complexity Request (Tier-2 Escalation)</h3>
+<blockquote>
+<p><strong>User types:</strong> <em>&quot;Plan a 10-day Europe trip on a budget&quot;</em></p>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant U as User
+    participant O as Orchestrator
+    participant T1 as Tier-1 Router<br/>(Always Loaded)
+    participant T2 as Tier-2 Reasoner<br/>(On-Demand)
+
+    U->>O: "Plan a 10-day Europe trip on a budget"
+    O->>T1: Route message (ChatML prompt)
+    T1-->>O: JSON response
+    Note right of T1: { intent: "trip_planning",<br/>complexity_score: 85,<br/>routing_confidence: 0.92,<br/>needs_tools: false,<br/>needs_clarification: false }
+    Note over O: complexity 85 > 60 threshold<br/>-- escalate to Tier-2
+    O->>T2: Load model into RAM (~1.8 GB)
+    O->>T2: Generate response (ChatML prompt)
+    loop Token Streaming
+        T2-->>O: next token
+        O-->>U: display token in UI
+    end
+    O->>T2: Unload model from RAM
+    Note over O: RAM freed for other app use
+</div></code></pre>
+<hr>
+<h3 id="example-2-tool-call-request-cloud-api-no-tier-2">Example 2: Tool Call Request (Cloud API, No Tier-2)</h3>
+<blockquote>
+<p><strong>User types:</strong> <em>&quot;What's the weather in Tokyo?&quot;</em></p>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant U as User
+    participant O as Orchestrator
+    participant T1 as Tier-1 Router<br/>(Always Loaded)
+    participant API as Cloud API
+
+    U->>O: "What's the weather in Tokyo?"
+    O->>T1: Route message (ChatML prompt)
+    T1-->>O: JSON response
+    Note right of T1: { intent: "weather_lookup",<br/>complexity_score: 25,<br/>needs_tools: true,<br/>tool: "weather_api",<br/>arguments: { city: "Tokyo" } }
+    Note over O: complexity 25 <= 60<br/>-- Tier-2 NOT loaded
+    Note over O: needs_tools = true<br/>-- call cloud API
+    O->>API: weather_api({ city: "Tokyo" })
+    API-->>O: Weather data JSON
+    O-->>U: Format and display weather result
+</div></code></pre>
+<hr>
+<h3 id="example-3-simple-local-response-tier-1-only">Example 3: Simple Local Response (Tier-1 Only)</h3>
+<blockquote>
+<p><strong>User types:</strong> <em>&quot;Hi, what can you do?&quot;</em></p>
+</blockquote>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant U as User
+    participant O as Orchestrator
+    participant T1 as Tier-1 Router<br/>(Always Loaded)
+
+    U->>O: "Hi, what can you do?"
+    O->>T1: Route message (ChatML prompt)
+    T1-->>O: JSON response
+    Note right of T1: { intent: "greeting",<br/>complexity_score: 10,<br/>needs_tools: false,<br/>needs_clarification: false }
+    Note over O: complexity 10 <= 60<br/>needs_tools = false<br/>-- handle locally
+    O-->>U: Return canned / local response
+</div></code></pre>
+<hr>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App crashes on model load</td>
+<td>Not enough RAM</td>
+<td>Use Q4_K_M instead of F16. Reduce <code>nCtx</code>. Close background apps during testing.</td>
+</tr>
+<tr>
+<td>Model outputs garbage</td>
+<td>Wrong prompt format</td>
+<td>Use ChatML format (<code>&lt;\|im_start\|&gt;</code> / <code>&lt;\|im_end\|&gt;</code> tokens). Qwen-2.5 requires this.</td>
+</tr>
+<tr>
+<td>Tier-1 outputs invalid JSON</td>
+<td>Poor fine-tuning data or too aggressive quantization</td>
+<td>Validate your dataset. Try Q5_K_M if Q4_K_M causes JSON issues.</td>
+</tr>
+<tr>
+<td>Asset copy takes too long</td>
+<td>Large model file</td>
+<td>Show a loading screen with progress. The copy only happens once (first launch).</td>
+</tr>
+<tr>
+<td>Tier-2 download fails</td>
+<td>Network issues</td>
+<td>Implement retry logic and resume support for large file downloads.</td>
+</tr>
+<tr>
+<td>Slow inference</td>
+<td>Too many context tokens or too many threads</td>
+<td>Reduce <code>nCtx</code>. Set <code>nThreads</code> to match physical CPU cores (not logical).</td>
+</tr>
+<tr>
+<td>4 GB asset limit on Android</td>
+<td>GGUF file exceeds 4 GB</td>
+<td>Only affects 7B F16 models. Q4_K_M for 7B is ~4 GB (borderline). Use 3B for safety.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="validating-your-model-works">Validating Your Model Works</h3>
+<p>Before integrating into Flutter, test your GGUF file on desktop using the llama.cpp CLI:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Test Tier-1 (should output JSON)</span>
+./main -m tier1_router_q4_k_m.gguf \
+  -p <span class="hljs-string">"&lt;|im_start|&gt;system\nYou are a Tier-1 router. Output JSON only.&lt;|im_end|&gt;\n&lt;|im_start|&gt;user\nBook a flight to Paris&lt;|im_end|&gt;\n&lt;|im_start|&gt;assistant\n"</span> \
+  -n 256
+
+<span class="hljs-comment"># Test Tier-2 (should output natural language)</span>
+./main -m tier2_reasoner_q4_k_m.gguf \
+  -p <span class="hljs-string">"&lt;|im_start|&gt;system\nYou are a helpful reasoning assistant.&lt;|im_end|&gt;\n&lt;|im_start|&gt;user\nExplain quantum computing simply&lt;|im_end|&gt;\n&lt;|im_start|&gt;assistant\n"</span> \
+  -n 512
+</div></code></pre>
+<hr>
+<h2 id="summary-decision-checklist">Summary: Decision Checklist</h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Which format for production?</td>
+<td><strong>Q4_K_M</strong> for both Tier-1 and Tier-2.</td>
+</tr>
+<tr>
+<td>Which format for development?</td>
+<td><strong>F16</strong> to validate quality, then quantize.</td>
+</tr>
+<tr>
+<td>Bundle Tier-1 in the app?</td>
+<td><strong>Yes</strong>, if under ~1 GB.</td>
+</tr>
+<tr>
+<td>Bundle Tier-2 in the app?</td>
+<td><strong>No</strong>. Download post-install.</td>
+</tr>
+<tr>
+<td>Load both models at once?</td>
+<td><strong>No</strong>. Tier-1 stays loaded. Tier-2 loads/unloads on demand.</td>
+</tr>
+<tr>
+<td>Which prompt format?</td>
+<td><strong>ChatML</strong> (<code>&lt;\|im_start\|&gt;</code> / <code>&lt;\|im_end\|&gt;</code>).</td>
+</tr>
+<tr>
+<td>Minimum device for Tier-1 only?</td>
+<td>4 GB RAM (most modern phones).</td>
+</tr>
+<tr>
+<td>Minimum device for Tier-1 + Tier-2?</td>
+<td>6 GB RAM (mid-range 2022+ phones).</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>
